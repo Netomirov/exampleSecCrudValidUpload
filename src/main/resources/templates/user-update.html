@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <title>Update</title>
+</head>
+<body>
+<h1><img th:src="${user.photosImagePath}" width="100" height="100"/></h1>
+
+<br/>
+<form th:action="@{/user-update}" th:object="${user}" enctype="multipart/form-data" method="post">
+    <div>
+        <label for="id">ID:</label>
+        <input type="number" id="id" th:field="*{id}" readonly>
+    </div>
+    <br/>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}">
+    </div>
+    <br/>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}">
+    </div>
+    <br/>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" readonly>
+    </div>
+    <br/>
+    <div>
+        <label for="role">Role:</label>
+        <input type="text" id="role" th:field="*{role}" >
+    </div>
+    <br/>
+
+    <div>
+        <label for="images">Images:</label>
+        <input type="file" name="image" id="images" accept="/*"  >
+    </div>
+    <br/>
+    <input type="submit" value="Update">
+</form>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout">
+</form>
+</body>
+</html>

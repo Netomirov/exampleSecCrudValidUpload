@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <title>Home</title>
+</head>
+<body>
+<h1 th:text="'Hello ' + ${#authentication.getPrincipal().getName()}" ></h1>
+
+<form th:action="@{/home}" >
+    <label for ="keyword">Name:
+        <input id ="keyword" type="text" name="keyword" th:value="*{keyword}">
+    </label>
+    <button type="submit">Filter </button>
+</form>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>
+            <a th:href="@{'/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">
+                Name</a>
+        </th>
+        <th>
+            <a th:href="@{'/page/' + ${currentPage} + '?sortField=email&sortDir=' + ${reverseSortDir}}">
+                Email</a>
+        </th>
+        <th>
+            <a th:href="@{'/page/' + ${currentPage} + '?sortField=password&sortDir=' + ${reverseSortDir}}">
+                Password</a>
+        </th>
+        <th>Images</th>
+        <th>
+            <a th:href="@{'/page/' + ${currentPage} + '?sortField=role&sortDir=' + ${reverseSortDir}}">
+                Role</a>
+        </th>
+        <th>Action</th>
+        <th sec:authorize="hasAuthority('ADMIN')">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user: ${listUser}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.password}"></td>
+        <td>
+            <img th:src="${user.photosImagePath}"  width="100" height="100"/>
+        </td>
+
+        <td th:text="${user.role}"></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><button><a th:href="@{/user-update/{id}(id=${user.id})}">Update</a></button></td>
+        <td sec:authorize="hasAuthority('ADMIN')"><button><a th:href="@{/user-delete/{id}(id=${user.id})}">Delete</a></button></td>
+    </tr>
+    </tbody>
+</table>
+<div th:if = "${totalPages > 1}">
+    <div class = "row col-sm-10">
+        <div class = "col-sm-2">
+            Total Rows: [[${totalItems}]]
+        </div>
+        <div class = "col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+					</span>
+        </div>
+        <div class = "col-sm-1">
+            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+            <span th:unless="${currentPage < totalPages}">Next</span>
+        </div>
+
+        <div class="col-sm-1">
+            <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+            <span th:unless="${currentPage < totalPages}">Last</span>
+        </div>
+    </div>
+</div>
+<br/>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout">
+</form>
+
+</body>
+</html>
